@@ -4,230 +4,381 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Koushal Pala | Software Engineer</title>
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --bg: #030303;
             --surface: #0a0a0a;
-            --line: rgba(255, 255, 255, 0.08);
+            --surface-2: #0f0f0f;
+            --line: rgba(255,255,255,0.08);
+            --line-hover: rgba(0,243,255,0.25);
             --text-main: #e6e6e6;
             --text-dim: #666666;
-            --accent: #00f3ff; /* Cyber Cyan */
-            --accent-glow: rgba(0, 243, 255, 0.2);
+            --text-mid: #999;
+            --accent: #00f3ff;
+            --accent-glow: rgba(0,243,255,0.18);
+            --accent-glow-strong: rgba(0,243,255,0.35);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
-        
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; cursor:crosshair; }
+
+        html { scroll-behavior: smooth; }
+
         body {
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Space Mono', monospace;
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.65;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ---------------- FLUID CANVAS ---------------- */
+        /* ---- CANVAS ---- */
         #flow-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.3;
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            z-index: 0; opacity: 0.3; pointer-events:none;
         }
 
+        /* ---- LAYOUT ---- */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 4vw;
+            padding: 0 clamp(20px, 5vw, 80px);
             position: relative;
             z-index: 2;
         }
 
-        /* ---------------- NAVIGATION ---------------- */
+        /* ---- NAV ---- */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 40px 0; mix-blend-mode: difference;
+            padding: clamp(24px, 4vw, 48px) 0;
+            position: relative; z-index: 10;
         }
-        .logo { font-weight: 700; letter-spacing: -1px; font-size: 1.1rem; }
-        .status { 
-            font-size: 0.75rem; text-transform: uppercase; 
-            color: var(--accent); border: 1px solid var(--accent); 
-            padding: 6px 16px; border-radius: 100px; 
-            animation: pulse 2s infinite;
+        .logo {
+            font-weight: 700; letter-spacing: -0.5px;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: var(--text-main);
         }
-
+        .logo span { color: var(--accent); }
+        .status {
+            font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+            text-transform: uppercase; color: var(--accent);
+            border: 1px solid var(--accent); padding: 5px 14px;
+            border-radius: 100px; letter-spacing: 0.08em;
+            animation: pulse 2.5s ease infinite;
+            white-space: nowrap;
+        }
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+            0%,100% { box-shadow: 0 0 0 0 rgba(0,243,255,0.3); }
+            50% { box-shadow: 0 0 0 8px rgba(0,243,255,0); }
         }
 
-        /* ---------------- HERO ---------------- */
+        /* ---- HERO ---- */
         header {
-            min-height: 85vh;
+            min-height: 88vh;
             display: flex; flex-direction: column; justify-content: center;
+            padding: clamp(40px,6vh,80px) 0;
+            position: relative;
         }
-
+        .hero-eyebrow {
+            font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+            color: var(--accent); letter-spacing: 0.2em;
+            text-transform: uppercase; margin-bottom: 24px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .hero-eyebrow::before {
+            content: ""; display:block; width:32px; height:1px; background:var(--accent);
+        }
         .hero-title {
             font-family: 'Syncopate', sans-serif;
-            font-size: clamp(3rem, 9vw, 8rem);
-            line-height: 0.9;
+            font-size: clamp(2.4rem, 8.5vw, 8rem);
+            line-height: 0.92;
             text-transform: uppercase;
             color: transparent;
-            -webkit-text-stroke: 1px rgba(255,255,255,0.85);
-            margin-bottom: 40px;
-            position: relative;
-            transition: 0.4s ease;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+            margin-bottom: 44px;
+            transition: color 0.4s ease, text-shadow 0.4s ease, -webkit-text-stroke 0.4s ease;
+            word-break: break-word;
         }
-
         .hero-title:hover {
             color: var(--text-main);
             -webkit-text-stroke: 0px;
-            text-shadow: 0 0 40px var(--accent-glow);
+            text-shadow: 0 0 60px var(--accent-glow);
         }
-
         .hero-bio {
-            max-width: 650px;
-            font-size: 1.1rem;
+            max-width: clamp(300px, 55vw, 640px);
+            font-size: clamp(0.88rem, 1.6vw, 1.05rem);
             color: var(--text-dim);
             border-left: 2px solid var(--accent);
-            padding-left: 24px;
+            padding-left: clamp(16px, 2.5vw, 28px);
+            line-height: 1.75;
         }
-        
         .hero-bio strong { color: var(--text-main); font-weight: 400; }
-
+        .hero-meta {
+            display: flex; gap: clamp(16px, 4vw, 48px); margin-top: 48px;
+            flex-wrap: wrap;
+        }
+        .hero-stat { display: flex; flex-direction: column; gap: 4px; }
+        .hero-stat-val {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem); font-weight: 700;
+            color: var(--accent); font-family: 'Syncopate', sans-serif;
+        }
+        .hero-stat-label {
+            font-size: 0.65rem; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.12em;
+        }
         .scroll-indicator {
-            position: absolute; bottom: 40px; right: 4vw;
-            writing-mode: vertical-rl; text-orientation: mixed;
-            font-size: 0.75rem; color: var(--text-dim); letter-spacing: 2px;
+            position: absolute; bottom: clamp(20px, 4vh, 48px); right: 0;
+            writing-mode: vertical-rl; font-size: 0.65rem;
+            color: var(--text-dim); letter-spacing: 3px;
+            text-transform: uppercase; opacity: 0.6;
         }
 
-        /* ---------------- SEPARATOR ---------------- */
+        /* ---- SEPARATOR ---- */
         .separator {
-            width: 100%; height: 1px; background: var(--line);
-            margin: 0; position: relative;
+            width:100%; height:1px; background:var(--line); position:relative;
         }
         .separator::after {
-            content: "+"; position: absolute; right: 0; top: -10px; color: var(--text-dim);
+            content:"+"; position:absolute; right:0; top:-10px;
+            color:var(--text-dim); font-size:0.85rem;
         }
 
-        /* ---------------- PROJECTS LIST ---------------- */
+        /* ---- SECTION HEADER ---- */
         .section-header {
-            padding: 120px 0 60px 0;
+            padding: clamp(60px,10vh,120px) 0 clamp(32px,5vh,60px);
             display: flex; align-items: flex-end; gap: 20px;
         }
-        .section-label { 
-            font-size: clamp(2.5rem, 5vw, 4rem); 
-            font-family: 'Syncopate', sans-serif; 
-            -webkit-text-stroke: 1px var(--text-dim); color: transparent; 
+        .section-label {
+            font-size: clamp(1.8rem, 4.5vw, 4rem);
+            font-family: 'Syncopate', sans-serif;
+            -webkit-text-stroke: 1px var(--text-dim);
+            color: transparent;
         }
-        
+        .section-sub {
+            font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+            color: var(--text-dim); text-transform: uppercase;
+            letter-spacing: 0.1em; padding-bottom: 8px;
+        }
+
+        /* ---- PROJECTS ---- */
         .project-row {
             border-top: 1px solid var(--line);
-            padding: 70px 0;
-            display: grid; grid-template-columns: 0.5fr 2fr 1fr;
-            transition: 0.4s background;
-            align-items: flex-start;
+            padding: clamp(40px, 6vw, 72px) 0;
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: clamp(16px, 3vw, 40px);
+            align-items: start;
+            transition: background 0.35s ease;
+            position: relative;
         }
+        .project-row::after {
+            content:""; position:absolute; left:0; bottom:0;
+            width:0; height:1px; background:var(--accent);
+            transition: width 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .project-row:hover { background: rgba(0,243,255,0.02); }
+        .project-row:hover::after { width:100%; }
+        .project-row:hover .p-name { color:var(--accent); transform:translateX(8px); }
 
-        .project-row:hover { background: rgba(255,255,255,0.02); }
-        .project-row:hover .p-name { color: var(--accent); transform: translateX(10px); }
+        .p-num {
+            font-size: 0.8rem; color: var(--text-dim); font-weight:700;
+            padding-top: 8px;
+        }
+        .p-content { display:flex; flex-direction:column; gap:14px; }
+        .p-name {
+            font-size: clamp(1.3rem, 3vw, 2.1rem); font-weight:700;
+            transition: color 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
+            line-height: 1.15;
+        }
+        .p-desc {
+            max-width: 600px; color:var(--text-dim);
+            font-size: clamp(0.82rem, 1.4vw, 0.93rem); line-height:1.7;
+        }
+        .p-desc strong { color: var(--text-mid); font-weight:400; }
+        .p-tags { display:flex; gap:8px; flex-wrap:wrap; }
+        .tag {
+            font-size: 0.68rem; border:1px solid var(--line); padding:5px 10px;
+            color: var(--text-mid); text-transform:uppercase; letter-spacing:0.05em;
+            transition: border-color 0.3s, color 0.3s;
+        }
+        .project-row:hover .tag { border-color: var(--line-hover); }
 
-        .p-num { font-size: 0.9rem; color: var(--text-dim); font-weight: 700; }
-        .p-content { display: flex; flex-direction: column; gap: 16px; }
-        
-        .p-name { 
-            font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; 
-            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* ---- PROJECT LINK BUTTONS ---- */
+        .p-links {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
         }
-        
-        .p-desc { 
-            max-width: 550px; color: var(--text-dim); 
-            font-size: 0.95rem; line-height: 1.6; 
+        .p-btn {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--text-dim); text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+            position: relative; overflow: hidden;
+            white-space: nowrap;
         }
-        
-        .p-tags { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-        .tag { 
-            font-size: 0.75rem; border: 1px solid var(--line); padding: 6px 12px; 
-            color: var(--text-main); text-transform: uppercase; letter-spacing: 0.05em;
+        .p-btn::before {
+            content:""; position:absolute; inset:0;
+            background: var(--accent); opacity:0;
+            transition: opacity 0.25s ease;
         }
+        .p-btn span { position:relative; z-index:1; }
+        .p-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(0,243,255,0.15), inset 0 0 12px rgba(0,243,255,0.04);
+        }
+        .p-btn.primary {
+            border-color: rgba(0,243,255,0.25);
+            color: var(--text-mid);
+        }
+        .p-btn.primary:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 16px rgba(0,243,255,0.2), inset 0 0 16px rgba(0,243,255,0.05);
+        }
+        .p-btn-icon { font-style: normal; opacity: 0.6; font-size: 0.7rem; }
 
-        .p-link {
-            text-align: right;
-            display: flex; flex-direction: column; align-items: flex-end;
-            justify-content: space-between; height: 100%;
-        }
-        .arrow-btn {
-            font-size: 2.5rem; color: var(--text-dim); text-decoration: none;
-            transition: 0.3s;
-        }
-        .project-row:hover .arrow-btn { color: var(--accent); transform: rotate(-45deg); }
-
-        /* ---------------- SKILLS MARQUEE ---------------- */
+        /* ---- MARQUEE ---- */
         .marquee-container {
-            padding: 80px 0; overflow: hidden; white-space: nowrap; 
+            padding: clamp(48px, 8vh, 80px) 0;
+            overflow: hidden; white-space: nowrap;
             border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-            background: rgba(0, 243, 255, 0.02);
+            background: rgba(0,243,255,0.015);
+            position: relative; z-index:2;
         }
-        .marquee-content {
-            display: inline-block; animation: scroll 25s linear infinite;
+        .marquee-track {
+            display: flex; animation: marquee-scroll 28s linear infinite;
+            width: max-content;
         }
+        .marquee-track:hover { animation-play-state: paused; }
         .skill-word {
-            font-family: 'Syncopate', sans-serif; font-size: 3.5rem; font-weight: 700;
-            color: transparent; -webkit-text-stroke: 1px var(--text-dim); margin-right: 80px;
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight:700;
+            color: transparent; -webkit-text-stroke: 1px var(--text-dim);
+            margin-right: clamp(40px, 6vw, 80px); flex-shrink:0;
+            transition: -webkit-text-stroke 0.3s;
         }
-        .skill-word.highlight { -webkit-text-stroke: 1px var(--accent); opacity: 0.9; }
+        .skill-word.hl { -webkit-text-stroke: 1px var(--accent); }
+        @keyframes marquee-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
-        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-        /* ---------------- EXPERIENCE & EDU ---------------- */
+        /* ---- GRID CARDS ---- */
         .grid-layout {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(16px, 2.5vw, 28px);
+            margin-top: clamp(24px, 4vh, 48px);
         }
-        
         .info-card {
-            background: var(--surface); border: 1px solid var(--line); padding: 40px;
-            transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            padding: clamp(24px, 3.5vw, 40px);
+            transition: border-color 0.3s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1);
+            display: flex; flex-direction:column; gap:16px;
         }
-        .info-card:hover { border-color: var(--accent); transform: translateY(-5px); }
-        
-        .card-header { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: flex-start; }
-        .role-title { font-size: 1.25rem; font-weight: 700; color: #fff; }
-        .role-date { font-size: 0.8rem; color: var(--accent); border: 1px solid var(--accent); padding: 2px 8px; border-radius: 4px; }
-        
-        .company-name { color: var(--text-dim); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: block; }
-        
-        .info-list { list-style: none; color: var(--text-dim); font-size: 0.95rem; }
-        .info-list li { margin-bottom: 10px; padding-left: 20px; position: relative; }
-        .info-list li::before { content: ">>"; position: absolute; left: 0; color: var(--accent); font-size: 0.7rem; top: 4px; }
+        .info-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+        .card-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+        .role-title { font-size: clamp(0.95rem, 1.8vw, 1.15rem); font-weight:700; color:#fff; line-height:1.3; }
+        .role-date {
+            font-size: 0.68rem; color:var(--accent); border:1px solid var(--accent);
+            padding:2px 8px; border-radius:4px; white-space:nowrap; flex-shrink:0;
+        }
+        .company-name {
+            color:var(--text-dim); font-size:0.78rem;
+            text-transform:uppercase; letter-spacing:1px;
+        }
+        .info-list { list-style:none; color:var(--text-dim); font-size:clamp(0.8rem,1.3vw,0.88rem); display:flex; flex-direction:column; gap:8px; }
+        .info-list li { padding-left:28px; position:relative; line-height:1.55; }
+        .info-list li::before {
+            content:">>"; position:absolute; left:0; top:2px;
+            color:var(--accent); font-size:0.62rem;
+        }
+        .info-list strong { color:var(--text-mid); font-weight:400; }
+        .span-2 { grid-column: span 2; }
 
-        /* ---------------- FOOTER ---------------- */
+        /* ---- ACHIEVEMENTS STRIP ---- */
+        .achievements {
+            margin-top: clamp(24px, 4vh, 48px);
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: clamp(12px, 2vw, 20px);
+        }
+        .ach-card {
+            border: 1px solid var(--line); padding: clamp(16px, 2.5vw, 28px);
+            background: var(--surface-2);
+            transition: border-color 0.3s, transform 0.3s;
+            display:flex; flex-direction:column; gap:8px;
+        }
+        .ach-card:hover { border-color: var(--line-hover); transform: translateY(-3px); }
+        .ach-icon { font-size: 1.3rem; }
+        .ach-title { font-size: clamp(0.82rem, 1.4vw, 0.92rem); color: var(--text-main); font-weight:700; line-height:1.3; }
+        .ach-desc { font-size: 0.75rem; color: var(--text-dim); line-height:1.5; }
+
+        /* ---- FOOTER ---- */
         footer {
-            padding: 120px 0 60px 0;
-            display: flex; justify-content: space-between; align-items: flex-end;
+            padding: clamp(60px,10vh,120px) 0 clamp(40px,6vh,60px);
+            display:flex; justify-content:space-between; align-items:flex-end;
+            border-top: 1px solid var(--line); margin-top: clamp(60px,10vh,120px);
+            gap: 40px; flex-wrap: wrap;
         }
-        .contact-header { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 24px; display: block; letter-spacing: 0.1em; }
+        .contact-header {
+            font-size: 0.7rem; color:var(--text-dim); margin-bottom:16px;
+            display:block; letter-spacing:0.12em; text-transform:uppercase;
+        }
         .email-link {
-            font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 700; color: var(--text-main);
-            text-decoration: none; border-bottom: 1px solid var(--line);
-            transition: 0.3s;
+            font-size: clamp(1rem, 3.5vw, 2.6rem); font-weight:700;
+            color:var(--text-main); text-decoration:none;
+            border-bottom: 1px solid var(--line);
+            transition: color 0.3s, border-color 0.3s;
+            word-break: break-all;
         }
-        .email-link:hover { color: var(--accent); border-color: var(--accent); }
-
+        .email-link:hover { color:var(--accent); border-color:var(--accent); }
+        .links-group { display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
         .links-group a {
-            display: block; color: var(--text-dim); text-decoration: none; 
-            margin-bottom: 12px; text-align: right; transition: 0.3s; font-size: 0.9rem;
+            color:var(--text-dim); text-decoration:none; font-size:0.82rem;
+            transition: color 0.3s, letter-spacing 0.3s;
+            text-align:right;
         }
-        .links-group a:hover { color: var(--text-main); letter-spacing: 1px; }
+        .links-group a:hover { color:var(--text-main); letter-spacing:1px; }
+        .footer-copy {
+            width:100%; font-size:0.65rem; color:var(--text-dim);
+            border-top:1px solid var(--line); padding-top:20px;
+            margin-top:20px; display:flex; justify-content:space-between;
+            flex-wrap:wrap; gap:8px; opacity:0.6;
+        }
 
-        @media (max-width: 900px) {
-            .project-row { grid-template-columns: 1fr; gap: 24px; }
-            .p-num { display: none; }
-            .p-link { text-align: left; align-items: flex-start; margin-top: 20px; height: auto; }
-            .grid-layout { grid-template-columns: 1fr; gap: 24px; }
-            footer { flex-direction: column; align-items: flex-start; gap: 60px; }
-            .links-group a { text-align: left; }
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 1024px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .span-2 { grid-column: span 1; }
+            .achievements { grid-template-columns: repeat(2, 1fr); }
         }
+        @media (max-width: 768px) {
+            .project-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .p-num { display:none; }
+            .achievements { grid-template-columns: 1fr; }
+            .links-group { align-items:flex-start; }
+            .links-group a { text-align:left; }
+        }
+        @media (max-width: 480px) {
+            .hero-meta { gap: 24px; }
+            .marquee-track { animation-duration: 20s; }
+        }
+
+        /* ---- FADE IN ---- */
+        .fade-up {
+            opacity:0; transform: translateY(28px);
+            transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.16,1,0.3,1);
+        }
+        .fade-up.visible { opacity:1; transform: translateY(0); }
     </style>
 </head>
 <body>
@@ -235,234 +386,341 @@
 <canvas id="flow-canvas"></canvas>
 
 <div class="container">
+
+    <!-- NAV -->
     <nav>
-        <div class="logo">KOUSHAL_PALA</div>
+        <div class="logo">KOUSHAL<span>_</span>PALA</div>
         <div class="status">● Open to Work</div>
     </nav>
 
+    <!-- HERO -->
     <header>
-        <h1 class="hero-title">
-            Engineering<br>Robust<br>Systems
+        <div class="hero-eyebrow fade-up">Software Engineer · CS Undergraduate</div>
+        <h1 class="hero-title fade-up">
+            Building<br>Robust<br>Systems
         </h1>
-        <div class="hero-bio">
+        <div class="hero-bio fade-up">
             <p>
-                <strong>Software Engineer</strong> (CGPA 8.4) bridging the gap between scalable backend logic and interactive frontend products. Experienced in <strong>Python, Full-Stack Development, and AI Automation</strong>.
+                <strong>Backend &amp; AI Systems Engineer</strong> (CGPA 8.5) bridging scalable cloud-native architecture with intelligent automation. Specializing in <strong>Python, RAG &amp; Text-to-SQL pipelines, Full-Stack Development, and DevOps automation</strong>.
             </p>
+        </div>
+        <div class="hero-meta fade-up">
+            <div class="hero-stat">
+                <span class="hero-stat-val">200+</span>
+                <span class="hero-stat-label">DSA Problems</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-val">350+</span>
+                <span class="hero-stat-label">Active Users</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-val">8.5</span>
+                <span class="hero-stat-label">CGPA</span>
+            </div>
         </div>
         <div class="scroll-indicator">SCROLL_TO_DECRYPT</div>
     </header>
 
     <div class="separator"></div>
 
+    <!-- PROJECTS -->
     <section id="work">
-        <div class="section-header">
+        <div class="section-header fade-up">
             <span class="section-label">INDEX_01</span>
+            <span class="section-sub">/ Selected Work</span>
         </div>
 
-        <div class="project-row">
+        <div class="project-row fade-up">
             <div class="p-num">/001</div>
+            <div class="p-content">
+                <div class="p-name">Healthcare Analytics Pipeline</div>
+                <div class="p-desc">
+                    Production-style <strong>cloud-native healthcare data platform</strong> built as an internship team project. Combines Apache Airflow orchestration on AWS EC2, Glue ETL, S3 storage, Streamlit dashboards, and an <strong>AI-powered natural language query assistant</strong> using a hybrid RAG + Text-to-SQL architecture.
+                </div>
+                <div class="p-tags">
+                    <span class="tag">Python</span><span class="tag">AWS</span><span class="tag">Airflow</span>
+                    <span class="tag">RAG</span><span class="tag">Text-to-SQL</span><span class="tag">Flask</span><span class="tag">MongoDB</span>
+                </div>
+                <div class="p-links">
+                    <a href="https://github.com/01koushal/Development-of-Big-Data-Pipeline-for-Healthcare-Analytics-using-Python" target="_blank" class="p-btn primary"><span>⌥ GitHub</span></a>
+                    <a href="https://development-of-big-data-pipeline-fo-three.vercel.app/" target="_blank" class="p-btn"><span>↗ Frontend</span></a>
+                    <a href="https://mb5xxdo4ar57ypbqozdxsc.streamlit.app/" target="_blank" class="p-btn"><span>◈ Dashboard</span></a>
+                    <a href="https://www.youtube.com/watch?v=BWlpSQnlLGo" target="_blank" class="p-btn"><span>▶ Demo Video</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-row fade-up">
+            <div class="p-num">/002</div>
+            <div class="p-content">
+                <div class="p-name">LLM Data Query System</div>
+                <div class="p-desc">
+                    AI-powered query engine that converts <strong>natural language into SQL</strong> executed over AWS S3 datasets via DuckDB. Overcomes traditional RAG limitations for aggregations and numerical queries. Hybrid architecture: FAISS vector search + Groq-powered SQL generation + live Flask API.
+                </div>
+                <div class="p-tags">
+                    <span class="tag">Python</span><span class="tag">DuckDB</span><span class="tag">FAISS</span>
+                    <span class="tag">AWS S3</span><span class="tag">Flask</span><span class="tag">Groq API</span>
+                </div>
+                <div class="p-links">
+                    <a href="https://s3-agent.onrender.com" target="_blank" class="p-btn primary"><span>↗ Live Demo</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-row fade-up">
+            <div class="p-num">/003</div>
+            <div class="p-content">
+                <div class="p-name">SRUX — Student Utility Platform</div>
+                <div class="p-desc">
+                    Attendance tracking, CGPA calculator, and timetable utilities for SR University students. Engineered for <strong>lightweight performance, offline-friendly behavior</strong>, and clean UX. Currently serving <strong>350+ active users</strong> tracked via Google Analytics.
+                </div>
+                <div class="p-tags">
+                    <span class="tag">HTML/CSS/JS</span><span class="tag">Flask</span><span class="tag">Python</span><span class="tag">Vercel</span>
+                </div>
+                <div class="p-links">
+                    <a href="https://srux.vercel.app" target="_blank" class="p-btn primary"><span>↗ Live App</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-row fade-up">
+            <div class="p-num">/004</div>
+            <div class="p-content">
+                <div class="p-name">AI YouTube Shorts Automation</div>
+                <div class="p-desc">
+                    Fully autonomous video production pipeline. Chains <strong>AI script generation → TTS → subtitle generation → FFmpeg processing → YouTube upload</strong> via n8n workflows running inside Docker containers. Zero manual intervention.
+                </div>
+                <div class="p-tags">
+                    <span class="tag">n8n</span><span class="tag">Docker</span><span class="tag">FFmpeg</span>
+                    <span class="tag">Gemini AI</span><span class="tag">YouTube API</span>
+                </div>
+                <div class="p-links">
+                    <a href="https://github.com/01koushal/ai-youtube-shorts-automation" target="_blank" class="p-btn primary"><span>⌥ GitHub</span></a>
+                    <a href="https://www.youtube.com/@FactActVibe" target="_blank" class="p-btn"><span>▶ YouTube Channel</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-row fade-up">
+            <div class="p-num">/005</div>
             <div class="p-content">
                 <div class="p-name">Fake Certificate Detector</div>
                 <div class="p-desc">
-                    A complete full-stack web application ensuring digital trust. Features a <strong>responsive frontend (HTML/JS)</strong> connected to a Flask backend that deploys automated Selenium workers for real-time verification.
+                    Full-stack certificate verification system. Accepts uploaded PDFs, extracts text and QR data via OCR, detects the issuing platform, and deploys <strong>Selenium workers to validate against official sources</strong>. Supports Coursera, Udemy, Infosys Springboard, and more.
                 </div>
                 <div class="p-tags">
-                    <span class="tag">Full Stack</span>
-                    <span class="tag">Flask</span>
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">Selenium</span>
+                    <span class="tag">Flask</span><span class="tag">Selenium</span><span class="tag">OCR</span>
+                    <span class="tag">PyMuPDF</span><span class="tag">BeautifulSoup</span>
                 </div>
-            </div>
-            <div class="p-link">
-                <a href="https://github.com/01koushal/techstorm_nexus" target="_blank" class="arrow-btn">↗</a>
-            </div>
-        </div>
-
-        <div class="project-row">
-            <div class="p-num">/002</div>
-            <div class="p-content">
-                <div class="p-name">AI Content Pipeline</div>
-                <div class="p-desc">
-                    Autonomous system architecture. Pipelines generative AI tools (n8n, Hugging Face) into a containerized workflow using <strong>Docker</strong> to produce and deploy content at scale.
+                <div class="p-links">
+                    <a href="https://github.com/01koushal/techstorm_nexus" target="_blank" class="p-btn primary"><span>⌥ GitHub</span></a>
                 </div>
-                <div class="p-tags">
-                    <span class="tag">System Design</span>
-                    <span class="tag">Python</span>
-                    <span class="tag">Docker</span>
-                    <span class="tag">DevOps</span>
-                </div>
-            </div>
-            <div class="p-link">
-                <a href="https://www.youtube.com/@FactActVibe" target="_blank" class="arrow-btn">↗</a>
-            </div>
-        </div>
-
-        <div class="project-row">
-            <div class="p-num">/003</div>
-            <div class="p-content">
-                <div class="p-name">Real Estate Analytics</div>
-                <div class="p-desc">
-                    End-to-end ML deployment. Linear Regression model exposed via a live web service on Render, featuring data preprocessing and predictive analytics.
-                </div>
-                <div class="p-tags">
-                    <span class="tag">Machine Learning</span>
-                    <span class="tag">Scikit-Learn</span>
-                    <span class="tag">Web Deployment</span>
-                </div>
-            </div>
-            <div class="p-link">
-                <a href="https://house-price-prediction-ko64.onrender.com/" target="_blank" class="arrow-btn">↗</a>
             </div>
         </div>
     </section>
 
+    <!-- SKILLS MARQUEE -->
     <div class="marquee-container">
-        <div class="marquee-content">
-            <span class="skill-word highlight">PYTHON</span>
+        <div class="marquee-track">
+            <span class="skill-word hl">PYTHON</span>
             <span class="skill-word">JAVA</span>
-            <span class="skill-word highlight">JAVASCRIPT</span>
-            <span class="skill-word">HTML/CSS</span>
-            <span class="skill-word highlight">DOCKER</span>
-            <span class="skill-word">FLASK</span>
-            <span class="skill-word highlight">SQL</span>
+            <span class="skill-word hl">FLASK</span>
+            <span class="skill-word">NODE.JS</span>
+            <span class="skill-word hl">DOCKER</span>
+            <span class="skill-word">AWS</span>
+            <span class="skill-word hl">SQL</span>
+            <span class="skill-word">MONGODB</span>
+            <span class="skill-word hl">RAG</span>
+            <span class="skill-word">AIRFLOW</span>
+            <span class="skill-word hl">REACT</span>
             <span class="skill-word">GIT</span>
-            <span class="skill-word highlight">PYTHON</span>
+            <!-- duplicate for seamless loop -->
+            <span class="skill-word hl">PYTHON</span>
             <span class="skill-word">JAVA</span>
-            <span class="skill-word highlight">JAVASCRIPT</span>
+            <span class="skill-word hl">FLASK</span>
+            <span class="skill-word">NODE.JS</span>
+            <span class="skill-word hl">DOCKER</span>
+            <span class="skill-word">AWS</span>
+            <span class="skill-word hl">SQL</span>
+            <span class="skill-word">MONGODB</span>
+            <span class="skill-word hl">RAG</span>
+            <span class="skill-word">AIRFLOW</span>
+            <span class="skill-word hl">REACT</span>
+            <span class="skill-word">GIT</span>
         </div>
     </div>
 
+    <!-- EXPERIENCE & EDUCATION -->
     <section id="experience">
-        <div class="section-header">
+        <div class="section-header fade-up">
             <span class="section-label">INDEX_02</span>
+            <span class="section-sub">/ Experience &amp; Education</span>
         </div>
         <div class="grid-layout">
-            <div class="info-card">
+            <div class="info-card fade-up">
                 <div class="card-header">
                     <h4 class="role-title">Python Developer Intern</h4>
-                    <span class="role-date"> Nov 2025 — Jan 2026 </span>
+                    <span class="role-date">Nov 2025 — Jan 2026</span>
                 </div>
                 <span class="company-name">Infosys Springboard</span>
                 <ul class="info-list">
-                    <li>Developing modular, scalable code in a team environment.</li>
-                    <li>Applying software engineering best practices to real-world modules.</li>
+                    <li>Built <strong>AI-powered backend systems</strong> for querying large datasets using RAG and Text-to-SQL approaches.</li>
+                    <li>Worked on cloud-based data processing workflows using AWS services for structured and unstructured datasets.</li>
+                    <li>Implemented backend automation pipelines using n8n and collaborated in an <strong>Agile environment</strong> with Git.</li>
                 </ul>
             </div>
 
-            <div class="info-card">
+            <div class="info-card fade-up">
                 <div class="card-header">
                     <h4 class="role-title">AI/ML Intern</h4>
                     <span class="role-date">2024</span>
                 </div>
                 <span class="company-name">Eduskills</span>
                 <ul class="info-list">
-                    <li>Implemented unsupervised learning models (clustering/classification).</li>
-                    <li>Optimized data preprocessing pipelines for accuracy.</li>
+                    <li>Implemented <strong>unsupervised learning models</strong> including clustering and classification algorithms.</li>
+                    <li>Optimized data preprocessing pipelines to improve model accuracy and reliability.</li>
+                    <li>Gained hands-on exposure to real-world ML workflows and dataset management.</li>
                 </ul>
             </div>
 
-            <div class="info-card" style="grid-column: span 2;">
+            <div class="info-card span-2 fade-up">
                 <div class="card-header">
-                    <h4 class="role-title">B.Tech Computer Science</h4>
+                    <h4 class="role-title">B.Tech Computer Science &amp; Engineering</h4>
                     <span class="role-date">2023 — 2027</span>
                 </div>
                 <span class="company-name">SR University</span>
                 <ul class="info-list">
-                    <li><strong>CGPA: 8.4</strong> | Consistent Academic Excellence Award.</li>
-                    <li>Coursework: DSA, OOP, DBMS, OS, Web Development.</li>
-                    <li><strong>3rd Prize</strong> at SRU Hackathon (Innovation & Teamwork).</li>
+                    <li><strong>CGPA: 8.5</strong> — Consistent Academic Excellence Award recipient.</li>
+                    <li>Core coursework: DSA, OOP, DBMS, Operating Systems, Web Development.</li>
+                    <li><strong>3rd Prize</strong> at SRU Hackathon for innovation and teamwork.</li>
+                    <li>Certificate of Appreciation for academic excellence from the department.</li>
                 </ul>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="achievements">
+            <div class="ach-card fade-up">
+                <div class="ach-icon">🏆</div>
+                <div class="ach-title">SRU Hackathon — 3rd Prize</div>
+                <div class="ach-desc">Built an innovative solution under pressure, recognized for problem-solving and team execution.</div>
+            </div>
+            <div class="ach-card fade-up">
+                <div class="ach-icon">⚡</div>
+                <div class="ach-title">200+ LeetCode Problems</div>
+                <div class="ach-desc">Consistent DSA practice strengthening algorithmic thinking and coding efficiency.</div>
+            </div>
+            <div class="ach-card fade-up">
+                <div class="ach-icon">📐</div>
+                <div class="ach-title">Academic Excellence Award</div>
+                <div class="ach-desc">Certificate of Appreciation from the CS department for sustained academic performance.</div>
             </div>
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer>
         <div>
-            <span class="contact-header">INITIATE CONTACT</span>
+            <span class="contact-header">Initiate Contact</span>
             <a href="mailto:koushalpala@gmail.com" class="email-link">koushalpala@gmail.com</a>
         </div>
         <div class="links-group">
-            <a href="https://github.com/01koushal">GITHUB // CODE</a>
-            <a href="https://linkedin.com/in/koushalpala">LINKEDIN // CONNECT</a>
-            <a href="#">RESUME // V3.0</a>
+            <a href="https://github.com/01koushal" target="_blank">GITHUB // CODE</a>
+            <a href="https://linkedin.com/in/koushalpala" target="_blank">LINKEDIN // CONNECT</a>
+            <a href="https://srux.vercel.app" target="_blank">SRUX // LIVE PROJECT</a>
+        </div>
+        <div class="footer-copy">
+            <span>© 2025 Koushal Pala</span>
+            <span>PORTFOLIO_V2 // SR UNIVERSITY</span>
         </div>
     </footer>
-</div>
+
+</div><!-- /container -->
 
 <script>
-    /* ---------------- FLOW FIELD SIMULATION ---------------- */
+/* ---- FLOW FIELD — original energy restored ---- */
+(function(){
     const canvas = document.getElementById('flow-canvas');
     const ctx = canvas.getContext('2d');
-    
-    let width, height;
-    let particles = [];
-    const particleCount = 600; 
-    const noiseScale = 0.005;
+    let W, H, particles = [];
+    const isMobile = () => window.innerWidth < 768;
+    const COUNT = () => isMobile() ? 350 : 600;
+    const noiseScale = 0.005; // original value
 
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
+    function resize(){
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', resize, { passive:true });
     resize();
 
     class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = 0;
-            this.vy = 0;
-            this.life = Math.random() * 100;
-            this.maxLife = 100 + Math.random() * 100;
+        constructor() { this.init(true); }
+        init(scatter) {
+            this.x = Math.random() * W;
+            this.y = scatter ? Math.random() * H : Math.random() * H;
+            this.vx = 0; this.vy = 0;
+            this.life = scatter ? Math.random() * 100 : 0;
+            this.maxLife = 100 + Math.random() * 100; // original range
         }
-
         update() {
-            // Flow field logic
+            // Original formula — high energy, strong directional flow
             const angle = (Math.cos(this.x * noiseScale) + Math.sin(this.y * noiseScale)) * Math.PI * 2;
-            
             this.vx += Math.cos(angle) * 0.1;
             this.vy += Math.sin(angle) * 0.1;
-            
-            this.vx *= 0.9;
+            this.vx *= 0.9; // original damping
             this.vy *= 0.9;
-
             this.x += this.vx;
             this.y += this.vy;
             this.life++;
-
-            if (this.x > width || this.x < 0 || this.y > height || this.y < 0 || this.life > this.maxLife) {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = 0;
-                this.vy = 0;
-                this.life = 0;
+            if(this.x > W || this.x < 0 || this.y > H || this.y < 0 || this.life > this.maxLife){
+                this.init(false);
             }
         }
-
         draw() {
-            ctx.fillStyle = `rgba(0, 243, 255, ${1 - this.life/this.maxLife})`;
+            // Slightly brighter than original for better visibility
+            ctx.fillStyle = `rgba(0,243,255,${(1 - this.life/this.maxLife) * 0.95})`;
             ctx.fillRect(this.x, this.y, 1.5, 1.5);
         }
     }
 
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+    function init() {
+        particles = [];
+        for(let i = 0; i < COUNT(); i++) particles.push(new Particle());
     }
+    init();
+    window.addEventListener('resize', ()=>{ resize(); init(); }, { passive:true });
 
     function animate() {
-        // Trail effect for smooth waves
-        ctx.fillStyle = 'rgba(3, 3, 3, 0.1)';
-        ctx.fillRect(0, 0, width, height);
-
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-
+        // Original trail opacity — gives the cinematic streak effect
+        ctx.fillStyle = 'rgba(3,3,3,0.1)';
+        ctx.fillRect(0, 0, W, H);
+        particles.forEach(p => { p.update(); p.draw(); });
         requestAnimationFrame(animate);
     }
     animate();
-</script>
+})();
 
+/* ---- SCROLL FADE IN ---- */
+(function(){
+    const els = document.querySelectorAll('.fade-up');
+    const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+            if(e.isIntersecting){
+                e.target.classList.add('visible');
+                obs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(el => obs.observe(el));
+
+    // Stagger children in rows
+    document.querySelectorAll('.grid-layout, .achievements').forEach(parent=>{
+        Array.from(parent.querySelectorAll('.fade-up')).forEach((el, i)=>{
+            el.style.transitionDelay = `${i * 80}ms`;
+        });
+    });
+})();
+</script>
 </body>
 </html>
